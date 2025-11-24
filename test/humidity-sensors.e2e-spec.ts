@@ -1,6 +1,8 @@
 import { Test, TestingModule } from '@nestjs/testing';
 import { INestApplication } from '@nestjs/common';
 import request from 'supertest';
+import { join } from 'path';
+import { TypeOrmModule } from '@nestjs/typeorm';
 import { AppModule } from './../src/app.module';
 
 describe('HumiditySensorsController (e2e)', () => {
@@ -9,7 +11,18 @@ describe('HumiditySensorsController (e2e)', () => {
 
   beforeAll(async () => {
     const moduleFixture: TestingModule = await Test.createTestingModule({
-      imports: [AppModule],
+      imports: [
+        // ensure tests use a dedicated Postgres DB, schema is dropped between runs
+        TypeOrmModule.forRoot({
+          type: 'postgres',
+          url: process.env.TEST_DATABASE_URL || process.env.DATABASE_URL,
+          synchronize: false,
+          dropSchema: true,
+          logging: false,
+          entities: [join(__dirname, '../src/**/*.entity{.ts,.js}')],
+        }),
+        AppModule,
+      ],
     }).compile();
     app = moduleFixture.createNestApplication();
     await app.init();

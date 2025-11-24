@@ -21,7 +21,7 @@ import { TemperatureSensor } from './temperature-sensors/entities/temperature-se
         password: configService.get<string>('DB_PASSWORD'),
         database: configService.get<string>('DB_NAME'),
         entities: [TemperatureSensor],
-        synchronize: true,
+        synchronize: false,
         ssl: {
           rejectUnauthorized: false,
         },
