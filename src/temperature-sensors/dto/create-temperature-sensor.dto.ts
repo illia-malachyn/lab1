@@ -1,19 +1,21 @@
-import { IsNotEmpty, IsString, IsNumber, IsOptional } from 'class-validator';
+import { IsNotEmpty, IsString, IsNumber, IsOptional, IsDate } from 'class-validator';
 import { Type } from 'class-transformer';
 export class CreateTemperatureSensorDto {
-    @IsNotEmpty()
-    @IsString()
-    name: string;
+  @IsNotEmpty()
+  @IsString()
+  name: string;
 
-    @IsNotEmpty()
-    @Type(() => Number)
-    @IsNumber()
-    temperature: number;
+  @IsNotEmpty()
+  @Type(() => Number)
+  @IsNumber()
+  value: number;
 
-    @IsNotEmpty()
-    @IsString()
-    unit: string;
+  @IsNotEmpty()
+  @IsString()
+  unit: string;
 
-    @IsOptional()
-    timestamp?: Date;
-} 
+  @IsOptional()
+  @Type(() => Date)
+  @IsDate()
+  timestamp?: Date;
+}

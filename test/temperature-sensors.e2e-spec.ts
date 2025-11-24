@@ -22,7 +22,7 @@ describe('TemperatureSensorsController (e2e)', () => {
   it('/temperature-sensors (POST)', async () => {
     const res = await request(app.getHttpServer())
       .post('/temperature-sensors')
-      .send({ name: 'Test Temp', temperature: 22.5, unit: 'C', timestamp: new Date() })
+      .send({ name: 'Test Temp', value: 22.5, unit: 'C', timestamp: new Date() })
       .expect(201);
     expect(res.body).toHaveProperty('id');
     createdId = res.body.id;
@@ -45,9 +45,9 @@ describe('TemperatureSensorsController (e2e)', () => {
   it('/temperature-sensors/:id (PATCH)', async () => {
     const res = await request(app.getHttpServer())
       .patch(`/temperature-sensors/${createdId}`)
-      .send({ temperature: 25 })
+      .send({ value: 25 })
       .expect(200);
-    expect(res.body).toHaveProperty('temperature', 25);
+    expect(res.body).toHaveProperty('value', 25);
   });
 
   it('/temperature-sensors/:id (DELETE)', async () => {

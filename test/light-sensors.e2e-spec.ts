@@ -22,7 +22,7 @@ describe('LightSensorsController (e2e)', () => {
   it('/light-sensors (POST)', async () => {
     const res = await request(app.getHttpServer())
       .post('/light-sensors')
-      .send({ name: 'Test Light', luminosity: 123, unit: 'lux', timestamp: new Date() })
+      .send({ name: 'Test Light', value: 123, unit: 'lux', timestamp: new Date() })
       .expect(201);
     expect(res.body).toHaveProperty('id');
     createdId = res.body.id;
@@ -45,9 +45,9 @@ describe('LightSensorsController (e2e)', () => {
   it('/light-sensors/:id (PATCH)', async () => {
     const res = await request(app.getHttpServer())
       .patch(`/light-sensors/${createdId}`)
-      .send({ luminosity: 456 })
+      .send({ value: 456 })
       .expect(200);
-    expect(res.body).toHaveProperty('luminosity', 456);
+    expect(res.body).toHaveProperty('value', 456);
   });
 
   it('/light-sensors/:id (DELETE)', async () => {

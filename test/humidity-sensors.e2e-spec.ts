@@ -22,7 +22,7 @@ describe('HumiditySensorsController (e2e)', () => {
   it('/humidity-sensors (POST)', async () => {
     const res = await request(app.getHttpServer())
       .post('/humidity-sensors')
-      .send({ name: 'Test Humidity', humidity: 55, unit: '%', timestamp: new Date() })
+      .send({ name: 'Test Humidity', value: 55, unit: '%', timestamp: new Date() })
       .expect(201);
     expect(res.body).toHaveProperty('id');
     createdId = res.body.id;
@@ -45,9 +45,9 @@ describe('HumiditySensorsController (e2e)', () => {
   it('/humidity-sensors/:id (PATCH)', async () => {
     const res = await request(app.getHttpServer())
       .patch(`/humidity-sensors/${createdId}`)
-      .send({ humidity: 60 })
+      .send({ value: 60 })
       .expect(200);
-    expect(res.body).toHaveProperty('humidity', 60);
+    expect(res.body).toHaveProperty('value', 60);
   });
 
   it('/humidity-sensors/:id (DELETE)', async () => {

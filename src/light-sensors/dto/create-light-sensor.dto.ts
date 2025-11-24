@@ -1,4 +1,4 @@
-import { IsNotEmpty, IsString, IsNumber, IsOptional } from 'class-validator';
+import { IsNotEmpty, IsString, IsNumber, IsOptional, IsDate } from 'class-validator';
 import { Type } from 'class-transformer';
 export class CreateLightSensorDto {
   @IsNotEmpty()
@@ -8,12 +8,14 @@ export class CreateLightSensorDto {
   @IsNotEmpty()
   @Type(() => Number)
   @IsNumber()
-  luminosity: number;
+  value: number;
 
   @IsNotEmpty()
   @IsString()
   unit: string;
 
   @IsOptional()
+  @Type(() => Date)
+  @IsDate()
   timestamp?: Date;
 }
