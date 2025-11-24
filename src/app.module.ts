@@ -8,6 +8,8 @@ import { LightSensorsModule } from './light-sensors/light-sensors.module';
 import { ConfigModule, ConfigService } from '@nestjs/config';
 import { TypeOrmModule } from '@nestjs/typeorm';
 import { TemperatureSensor } from './temperature-sensors/entities/temperature-sensor.entity';
+import { HumiditySensor } from './humidity-sensors/entities/humidity-sensor.entity';
+import { LightSensor } from './light-sensors/entities/light-sensor.entity';
 
 @Module({
   imports: [
@@ -20,7 +22,7 @@ import { TemperatureSensor } from './temperature-sensors/entities/temperature-se
         username: configService.get<string>('DB_USERNAME'),
         password: configService.get<string>('DB_PASSWORD'),
         database: configService.get<string>('DB_NAME'),
-        entities: [TemperatureSensor],
+        entities: [TemperatureSensor, HumiditySensor, LightSensor],
         synchronize: false,
         ssl: {
           rejectUnauthorized: false,
