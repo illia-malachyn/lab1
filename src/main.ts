@@ -22,10 +22,12 @@ async function bootstrap() {
     ? {
       origin: frontend, // restrict to frontend domain in production
       methods: 'GET,HEAD,PUT,PATCH,POST,DELETE,OPTIONS',
+      credentials: true,
     }
     : {
       origin: '*', // convenient for local/dev
       methods: 'GET,HEAD,PUT,PATCH,POST,DELETE,OPTIONS',
+      credentials: true,
     };
   app.enableCors(corsOptions);
 
