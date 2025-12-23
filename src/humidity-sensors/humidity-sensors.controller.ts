@@ -22,6 +22,15 @@ export class HumiditySensorsController {
     return this.service.findAll();
   }
 
+  @Sse('alerts')
+  alerts(): Observable<MessageEvent> {
+    return this.alertsService.getAlertStream().pipe(
+      map((alert) => ({
+        data: alert,
+      })),
+    );
+  }
+
   @Get(':id')
   findOne(@Param('id') id: string) {
     return this.service.findOne(id);
@@ -35,14 +44,5 @@ export class HumiditySensorsController {
   @Delete(':id')
   remove(@Param('id') id: string) {
     return this.service.remove(id);
-  }
-
-  @Sse('alerts')
-  alerts(): Observable<MessageEvent> {
-    return this.alertsService.getAlertStream().pipe(
-      map((alert) => ({
-        data: alert,
-      })),
-    );
   }
 }
