@@ -8,10 +8,26 @@ export class LoggingMiddleware implements NestMiddleware {
   use(req: Request, res: Response, next: NextFunction) {
     const { method, originalUrl } = req;
     const userAgent = req.get('user-agent') || '';
+    const isSSE = req.path.includes('alerts');
 
-    this.logger.log(
-      `${method} ${originalUrl} - ${userAgent}`
-    );
+    if (isSSE) {
+      this.logger.log(`[SSE] ${method} ${originalUrl} - Connecting...`);
+    } else {
+      this.logger.log(`${method} ${originalUrl} - ${userAgent}`);
+    }
+
+    // Log when response ends (for SSE connections)
+    res.on('finish', () => {
+      if (isSSE) {
+        this.logger.log(`[SSE] ${method} ${originalUrl} - Connection closed (status: ${res.statusCode})`);
+      }
+    });
+
+    res.on('close', () => {
+      if (isSSE) {
+        this.logger.warn(`[SSE] ${method} ${originalUrl} - Connection abruptly closed by client`);
+      }
+    });
 
     next();
   }
