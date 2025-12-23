@@ -53,7 +53,20 @@ export class HumiditySensorsService {
   }
 
   async update(id: string, dto: UpdateHumiditySensorDto) {
-    return await this.humiditySensorRepository.update(id, dto);
+    await this.humiditySensorRepository.update(id, dto);
+    const updated = await this.humiditySensorRepository.findOne({ where: { id } });
+    
+    if (updated && (updated.value <= this.CRITICAL_HUMIDITY_LOW || updated.value >= this.CRITICAL_HUMIDITY_HIGH)) {
+      this.alertsService.emitAlert({
+        message: `Critical humidity level! Humidity ${updated.value} ${updated.unit}`,
+        humidity: updated.value,
+        sensorName: updated.name,
+        timestamp: updated.timestamp,
+        severity: 'critical',
+      });
+    }
+    
+    return updated;
   }
 
   async remove(id: string) {

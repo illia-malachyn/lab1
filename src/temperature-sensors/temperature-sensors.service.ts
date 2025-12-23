@@ -51,7 +51,20 @@ export class TemperatureSensorsService {
   }
 
   async update(id: string, updateSensorDto: UpdateTemperatureSensorDto) {
-    return await this.temperatureSensorRepository.update(id, updateSensorDto);
+    await this.temperatureSensorRepository.update(id, updateSensorDto);
+    const updated = await this.temperatureSensorRepository.findOne({ where: { id } });
+    
+    if (updated && updated.value <= this.CRITICAL_TEMP) {
+      this.alertsService.emitAlert({
+        message: `Critical temperature! Value ${updated.value} ${updated.unit}`,
+        temperature: updated.value,
+        sensorName: updated.name,
+        timestamp: updated.timestamp,
+        severity: 'critical',
+      });
+    }
+    
+    return updated;
   }
 
   async remove(id: string) {

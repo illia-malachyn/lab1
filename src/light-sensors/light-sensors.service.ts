@@ -54,7 +54,20 @@ export class LightSensorsService {
 
 
   async update(id: string, dto: UpdateLightSensorDto) {
-    return await this.lightSensorRepository.update(id, dto);
+    await this.lightSensorRepository.update(id, dto);
+    const updated = await this.lightSensorRepository.findOne({ where: { id } });
+    
+    if (updated && updated.value <= this.CRITICAL_LUMINOSITY) {
+      this.alertsService.emitAlert({
+        message: `Critical light level! Luminosity ${updated.value} lux`,
+        luminosity: updated.value,
+        sensorName: updated.name,
+        timestamp: updated.timestamp,
+        severity: 'critical',
+      });
+    }
+    
+    return updated;
   }
 
   async remove(id: string) {
