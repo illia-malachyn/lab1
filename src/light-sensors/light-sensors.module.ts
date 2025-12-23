@@ -3,10 +3,11 @@ import { LightSensorsService } from './light-sensors.service';
 import { LightSensorsController } from './light-sensors.controller';
 import { TypeOrmModule } from '@nestjs/typeorm';
 import { LightSensor } from './entities/light-sensor.entity';
+import { LightAlertsService } from './light-alerts.service';
 
 @Module({
   imports: [TypeOrmModule.forFeature([LightSensor])],
   controllers: [LightSensorsController],
-  providers: [LightSensorsService],
+  providers: [LightSensorsService, LightAlertsService],
 })
 export class LightSensorsModule { }

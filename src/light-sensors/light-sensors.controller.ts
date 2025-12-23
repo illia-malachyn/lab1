@@ -1,11 +1,16 @@
-import { Controller, Get, Post, Body, Patch, Param, Delete } from '@nestjs/common';
+import { Controller, Get, Post, Body, Patch, Param, Delete, Sse, MessageEvent } from '@nestjs/common';
 import { LightSensorsService } from './light-sensors.service';
 import { CreateLightSensorDto } from './dto/create-light-sensor.dto';
 import { UpdateLightSensorDto } from './dto/update-light-sensor.dto';
+import { LightAlertsService } from './light-alerts.service';
+import { Observable, map } from 'rxjs';
 
 @Controller('light-sensors')
 export class LightSensorsController {
-  constructor(private readonly service: LightSensorsService) {}
+  constructor(
+    private readonly service: LightSensorsService,
+    private readonly alertsService: LightAlertsService,
+  ) {}
 
   @Post()
   create(@Body() dto: CreateLightSensorDto) {
@@ -30,5 +35,14 @@ export class LightSensorsController {
   @Delete(':id')
   remove(@Param('id') id: string) {
     return this.service.remove(id);
+  }
+
+  @Sse('alerts')
+  alerts(): Observable<MessageEvent> {
+    return this.alertsService.getAlertStream().pipe(
+      map((alert) => ({
+        data: alert,
+      })),
+    );
   }
 }
